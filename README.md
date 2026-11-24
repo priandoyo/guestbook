@@ -5,6 +5,7 @@ A simple full-stack guestbook application built with **Node.js, Express, SQLite,
 This project is a practical workshop reference for web development, authentication, session management, authorization, application security, and cloud deployment.
 
 **Repository:** https://github.com/priandoyo/guestbook
+**Live Demo:** https://guestbook-s8du.onrender.com
 
 ## Application Screenshots
 
