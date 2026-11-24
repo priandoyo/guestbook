@@ -25,6 +25,7 @@ router.get('/messages', (req, res) => {
     FROM messages
     JOIN users ON messages.user_id = users.id
     ORDER BY messages.id DESC
+    LIMIT 50
   `).all();
 
   res.json(messages);
@@ -32,27 +33,31 @@ router.get('/messages', (req, res) => {
 
 // Protected: Post message
 router.post('/messages', requireAuth, (req, res) => {
-  const { message } = req.body;
+  const { message } = req.body || {};
 
-  if (typeof message !== 'string' ||
-      !message.trim() ||
-      message.trim().length > 500) {
+  if (
+    typeof message !== 'string' ||
+    !message.trim() ||
+    message.trim().length > 500
+  ) {
     return res.status(400).json({
       error: 'Message must contain 1-500 characters.'
     });
   }
 
+  const cleanMessage = message.trim();
+
   const result = db.prepare(`
     INSERT INTO messages (user_id, message)
     VALUES (?, ?)
-  `).run(req.session.user.id, message.trim());
+  `).run(req.session.user.id, cleanMessage);
 
   res.status(201).json({
     success: true,
     message: {
       id: result.lastInsertRowid,
       username: req.session.user.username,
-      message: message.trim()
+      message: cleanMessage
     }
   });
 });
