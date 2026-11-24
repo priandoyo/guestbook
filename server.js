@@ -16,10 +16,14 @@ const app = express();
 const isProduction =
   process.env.NODE_ENV === 'production';
 
+const PORT = process.env.PORT || 3000;
+
+// Validate production configuration
 if (isProduction && !process.env.SESSION_SECRET) {
   throw new Error('SESSION_SECRET is required.');
 }
 
+// Render runs behind a reverse proxy
 if (isProduction) {
   app.set('trust proxy', 1);
 }
@@ -109,8 +113,6 @@ app.use((err, req, res, next) => {
 });
 
 // Start server
-const PORT = process.env.PORT || 3000;
-
-app.listen(PORT, () => {
+app.listen(PORT, '0.0.0.0', () => {
   console.log(`Guestbook running on port ${PORT}`);
 });
